@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>ShopSmart — Dashboard</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+        :root {
+            --bg: #f9fafb;
+            --card: #ffffff;
+            --muted: #6b7280;
+            --accent: #2563eb;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --glass: rgba(255, 255, 255, 0.75);
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+            background: var(--bg);
+            margin: 0;
+            color: #111827;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(90deg, #ffffff 0%, #f3f4f6 100%);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 60;
+            transition: all 0.3s ease;
+        }
+
+        .topbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .brand {
+            font-weight: 800;
+            color: var(--accent);
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav {
+            margin-left: 24px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .nav a {
+            color: #1f2937;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .nav a:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .nav a.active {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .search {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .search input {
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid #d1d5db;
+            width: 280px;
+            transition: all 0.2s ease;
+        }
+
+        .search input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+        .search button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search button:hover {
+            background: #1e40af;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 32px auto;
+            padding: 0 24px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px);
+        }
+
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .hero h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 160px;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #111827;
+        }
+
+        .price {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 16px;
+        }
+
+        .stock {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 12px;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #1e40af;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #d1d5db;
+            color: #111827;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: var(--muted);
+            padding: 22px 0;
+            font-size: 14px;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .page-link {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .page-link.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .page-link:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        @media (max-width: 980px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .search input {
+                width: 180px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search,
+            .nav {
+                display: none;
+            }
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .right {
+            margin-left: auto;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            background: #eef2ff;
+            color: var(--accent);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .empty {
+            padding: 36px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            align-items: center;
+            justify-content: center;
+            z-index: 120;
+        }
+
+        .modal-content {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 16px;
+            width: 380px;
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18);
+            transition: all 0.3s ease;
+        }
+
+        .modal-content h3 {
+            margin: 0 0 12px;
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .modal-content input,
+        .modal-content select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 12px;
+            border: 1px solid #d1d5db;
+            transition: all 0.2s ease;
+        }
+
+        .modal-content input:focus,
+        .modal-content select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .small {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <div class="topbar">
+            <div class="brand">🛍️ <span>ShopSmart</span></div>
+            <nav class="nav" id="navLinks">
+                <a href="#/" data-route="/">Home</a>
+                <a href="#/products" data-route="/products">Products</a>
+                <a href="#/cart" data-route="/cart">Cart <span id="cartCountBadge" class="badge"
+                        style="display:none"></span></a>
+                <a href="#/profile" data-route="/profile">Profile</a>
+            </nav>
+            <div class="search" role="search">
+                <input id="searchInput" type="search" placeholder="Search products..." />
+                <button id="searchBtn">Search</button>
+            </div>
+            <div class="profile">
+                <div id="authArea" class="muted"></div>
+                <button id="authToggle" class="btn-outline">Sign In</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" id="mainContent"></main>
+
+    <footer class="footer card" id="siteFooter">
+        &copy; <span id="footerYear"></span> ShopSmart — Total products: <strong id="totalProducts"></strong>
+    </footer>
+
+    <div id="productModal" class="modal">
+        <div class="modal-content" role="dialog" aria-modal="true">
+            <h3 id="productModalTitle">Product</h3>
+            <input id="productId" type="hidden" />
+            <input id="productName" placeholder="Product name" />
+            <input id="productPrice" type="number" placeholder="Price" />
+            <input id="productStock" type="number" placeholder="Stock" />
+            <div class="actions">
+                <button id="saveProductBtn" class="btn">Save</button>
+                <button onclick="closeProductModal()" class="btn btn-outline">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <h3 id="authTitle">Login</h3>
+            <input id="authUsername" placeholder="Username" />
+            <input id="authEmail" placeholder="Email (signup only)" />
+            <input id="authPassword" type="password" placeholder="Password" />
+            <div class="actions">
+                <button id="authSubmitBtn" class="btn">Submit</button>
+                <button onclick="closeAuthModal()" class="btn btn-outline">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="dialogModal" class="modal">
+        <div class="modal-content" style="max-width:400px; text-align:center;">
+            <h3 id="dialogTitle"></h3>
+            <p id="dialogMessage" style="margin:12px 0;"></p>
+            <div class="actions" id="dialogActions"></div>
+        </div>
+    </div>
+
+
+    <script>
+        const PRODUCTS_KEY = 'ss_products_v2';
+        const USERS_KEY = 'ss_users_v2';
+        const CART_KEY = 'ss_cart_v2';
+        const SESSION_KEY = 'ss_session_v2';
+
+        function seed() {
+            if (!localStorage.getItem(PRODUCTS_KEY)) {
+                const seed = [
+                    { id: 1, name: 'Wireless Headphones', price: 129.99, stock: 12 },
+                    { id: 2, name: 'Smartphone Pro', price: 999.00, stock: 5 },
+                    { id: 3, name: 'Fitness Tracker', price: 59.5, stock: 0 },
+                    { id: 4, name: '4K Monitor', price: 399.99, stock: 6 },
+                    { id: 5, name: 'Mechanical Keyboard', price: 89.0, stock: 20 },
+                    { id: 6, name: 'Gaming Mouse', price: 49.99, stock: 15 },
+                    { id: 7, name: 'Bluetooth Speaker', price: 79.5, stock: 3 },
+                    { id: 8, name: 'Portable SSD 1TB', price: 129.0, stock: 8 },
+                    { id: 9, name: 'Wireless Charger', price: 29.99, stock: 18 },
+                    { id: 10, name: 'Action Camera', price: 199.99, stock: 0 },
+                    { id: 11, name: 'Smart Light Bulb', price: 24.99, stock: 30 },
+                    { id: 12, name: 'Laptop Stand', price: 39.99, stock: 10 },
+                    { id: 13, name: 'Noise Cancelling Earbuds', price: 149.99, stock: 7 },
+                    { id: 14, name: 'Smart Thermostat', price: 249.99, stock: 2 },
+                    { id: 15, name: 'Router AX3000', price: 129.99, stock: 9 }
+                ];
+                localStorage.setItem(PRODUCTS_KEY, JSON.stringify(seed));
+            }
+            if (!localStorage.getItem(USERS_KEY)) {
+                const users = [
+                    { username: 'admin', email: 'admin@shopsmart.test', password: 'admin123', name: 'Shop Admin' }
+                ];
+                localStorage.setItem(USERS_KEY, JSON.stringify(users));
+            }
+            if (!localStorage.getItem(CART_KEY)) localStorage.setItem(CART_KEY, JSON.stringify([]));
+            if (!localStorage.getItem(SESSION_KEY)) localStorage.setItem(SESSION_KEY, JSON.stringify(null));
+        }
+        seed();
+
+        function getProducts() { return JSON.parse(localStorage.getItem(PRODUCTS_KEY)) || []; }
+        function saveProducts(d) { localStorage.setItem(PRODUCTS_KEY, JSON.stringify(d)); }
+        function getUsers() { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; }
+        function saveUsers(d) { localStorage.setItem(USERS_KEY, JSON.stringify(d)); }
+        function getCart() { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+        function saveCart(d) { localStorage.setItem(CART_KEY, JSON.stringify(d)); }
+        function getSession() { return JSON.parse(localStorage.getItem(SESSION_KEY)); }
+        function saveSession(s) { localStorage.setItem(SESSION_KEY, JSON.stringify(s)); }
+
+        function formatPrice(v) { const n = Number(v) || 0; return n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+        function totalProducts() { return getProducts().length; }
+
+        function renderFooter() { document.getElementById('footerYear').textContent = new Date().getFullYear(); document.getElementById('totalProducts').textContent = totalProducts(); }
+
+        function renderCartBadge() {
+            const badge = document.getElementById('cartCountBadge');
+            const cart = getCart();
+            const total = cart.reduce((s, i) => s + i.qty, 0);
+            if (total > 0) { badge.style.display = 'inline-block'; badge.textContent = total; } else { badge.style.display = 'none'; badge.textContent = ''; }
+        }
+
+        function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+        window.addEventListener('hashchange', router);
+        window.addEventListener('load', () => { initHeader(); router(); });
+
+        function initHeader() {
+            renderFooter();
+            renderCartBadge();
+            const searchInput = document.getElementById('searchInput');
+            document.getElementById('searchBtn').addEventListener('click', () => {
+                const q = searchInput.value.trim();
+                location.hash = `#/products?q=${encodeURIComponent(q)}&page=1`;
+            });
+            searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('searchBtn').click(); });
+            const session = getSession();
+            updateAuthUI(session);
+            document.getElementById('authToggle').addEventListener('click', () => {
+                const s = getSession();
+                if (s) { logout(); }
+                else { location.hash = '#/login'; }
+            });
+        }
+
+        function updateAuthUI(session) {
+            const authArea = document.getElementById('authArea');
+            const btn = document.getElementById('authToggle');
+            if (session && session.username) {
+                authArea.textContent = session.username;
+                btn.textContent = 'Sign Out';
+            } else {
+                authArea.textContent = 'Guest';
+                btn.textContent = 'Sign In';
+            }
+            renderFooter();
+            renderCartBadge();
+        }
+
+        function router() {
+            const hash = location.hash || '#/';
+            document.querySelectorAll('#navLinks a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === hash));
+            if (hash.startsWith('#/products')) return renderProductsFromHash(hash);
+            if (hash.startsWith('#/cart')) return renderCartPage();
+            if (hash.startsWith('#/profile')) return renderProfilePage();
+            if (hash.startsWith('#/login')) return renderLoginPage();
+            if (hash.startsWith('#/signup')) return renderSignupPage();
+            return renderHomePage();
+        }
+
+        function renderHomePage() {
+            const session = getSession();
+            const main = document.getElementById('mainContent');
+            main.innerHTML = `
+    <div class="card hero" style="align-items:flex-start">
+      <div>
+        <h2>Welcome to ShopSmart</h2>
+        <p class="muted">${session && session.username ? `Welcome back, ${escapeHtml(session.username)}!` : 'Sign in to start shopping.'}</p>
+      </div>
+      <div class="right">
+        <div style="text-align:right">
+          <div class="muted">Total Products</div>
+          <div style="font-weight:700;font-size:20px">${totalProducts()}</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:18px" class="card">
+      <h3>Featured Products</h3>
+      <div style="margin-top:12px" id="homeFeatured"></div>
+    </div>`;
+            const featured = getProducts().slice(0, 3);
+            const container = document.getElementById('homeFeatured');
+            featured.forEach(p => container.insertAdjacentHTML('beforeend', productCardHtml(p)));
+        }
+
+        function productCardHtml(p) {
+            const price = formatPrice(p.price);
+            const out = p.stock <= 0;
+            return `
+      <div class="product-card card" data-id="${p.id}">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="product-name">${escapeHtml(p.name)}</div>
+          <div class="price">$${price}</div>
+        </div>
+        <div class="muted">${out ? '<strong style="color:var(--danger)">Out of Stock</strong>' : '<span class="stock">In stock: ' + p.stock + '</span>'}</div>
+        <div style="display:flex;gap:8px;margin-top:auto;align-items:center">
+          <button class="btn btn-outline" onclick="viewProduct(${p.id})">Details</button>
+          <button class="btn" ${out ? 'disabled style="opacity:0.6;cursor:not-allowed"' : `onclick="addToCart(${p.id},1)"`}>Add to cart</button>
+        </div>
+      </div>`;
+        }
+
+        function renderProductsFromHash(hash) {
+            let q = ''; let page = 1;
+            const parts = hash.split('?');
+            if (parts[1]) { const params = new URLSearchParams(parts[1]); q = params.get('q') || ''; page = Number(params.get('page')) || 1; }
+            renderProducts({ query: q, page });
+        }
+
+        function renderProducts({ query = '', page = 1, pageSize = 6 }) {
+            const all = getProducts();
+            const filtered = all.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+            const total = filtered.length;
+            const totalPages = Math.max(1, Math.ceil(total / pageSize));
+            page = Math.min(Math.max(1, page), totalPages);
+            const start = (page - 1) * pageSize;
+            const pageItems = filtered.slice(start, start + pageSize);
+            const main = document.getElementById('mainContent');
+            main.innerHTML = `
+    <div class="grid">
+      <div>
+        <div class="card hero">
+          <div><h2>Products</h2><div class="muted">Showing ${filtered.length} product(s)</div></div>
+          <div class="right">
+            <div class="muted">Search: <strong>${escapeHtml(query)}</strong></div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div class="muted">Manage products below</div>
+            <div>
+              <button class="btn" onclick="openProductModal()">+ Add Product</button>
+            </div>
+          </div>
+          <div class="product-grid" id="productGrid"></div>
+          <div class="pagination" id="paginationArea"></div>
+        </div>
+      </div>
+      <aside>
+        <div class="card">
+          <h4>Quick Stats</h4>
+          <div class="muted" style="margin-top:8px">Total products: <strong>${totalProducts()}</strong></div>
+          <div class="muted" style="margin-top:6px">Matched: <strong>${filtered.length}</strong></div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <h4>Cart Summary</h4>
+          <div id="miniCartArea" class="muted" style="margin-top:8px"></div>
+          <div style="margin-top:12px"><a href="#/cart" class="btn">Open Cart</a></div>
+        </div>
+      </aside>
+    </div>`;
+            const grid = document.getElementById('productGrid');
+            pageItems.forEach(p => grid.insertAdjacentHTML('beforeend', productCardHtml(p)));
+            const pagArea = document.getElementById('paginationArea');
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'page-link ' + (i === page ? 'active' : '');
+                btn.textContent = i;
+                btn.onclick = () => location.hash = `#/products?q=${encodeURIComponent(query)}&page=${i}`;
+                pagArea.appendChild(btn);
+            }
+            renderMiniCartSummary();
+        }
+
+        function renderMiniCartSummary() {
+            const cart = getCart();
+            const products = getProducts();
+            if (cart.length === 0) { document.getElementById('miniCartArea').innerHTML = '<div class="muted">Cart is empty</div>'; return; }
+            let lines = ''; let total = 0;
+            cart.forEach(ci => {
+                const p = products.find(pp => pp.id === ci.id);
+                if (!p) return;
+                const lineTotal = p.price * ci.qty; total += lineTotal;
+                lines += `<div style="display:flex;justify-content:space-between;margin-bottom:6px"><div>${escapeHtml(p.name)} x${ci.qty}</div><div>$${formatPrice(lineTotal)}</div></div>`;
+            });
+            lines += `<div style="margin-top:8px;font-weight:700">Total: $${formatPrice(total)}</div>`;
+            document.getElementById('miniCartArea').innerHTML = lines;
+            renderCartBadge();
+        }
+
+        function addToCart(productId, qty = 1) {
+            const products = getProducts();
+            const p = products.find(x => x.id === productId);
+            if (!p) return alert('Product not found');
+            if (p.stock <= 0) return alert('Out of stock');
+            const cart = getCart();
+            const item = cart.find(i => i.id === productId);
+            if (item) item.qty += qty; else cart.push({ id: productId, qty });
+            saveCart(cart);
+            renderCartBadge();
+            renderMiniCartSummary();
+        }
+
+        function removeFromCart(id) {
+            const cart = getCart().filter(i => i.id !== id);
+            saveCart(cart);
+            renderCartBadge();
+        }
+
+        function clearCart() { saveCart([]); renderCartBadge(); renderMiniCartSummary(); }
+
+        function renderCartPage() {
+            const products = getProducts();
+            const cart = getCart();
+            const main = document.getElementById('mainContent');
+            let rows = '';
+            let grand = 0;
+            cart.forEach(ci => {
+                const p = products.find(pp => pp.id === ci.id);
+                if (!p) return;
+                const line = p.price * ci.qty; grand += line;
+                rows += `<tr>
+            <td>${escapeHtml(p.name)}</td>
+            <td style="text-align:right">$${formatPrice(p.price)}</td>
+            <td style="text-align:center">${ci.qty}</td>
+            <td style="text-align:right">$${formatPrice(line)}</td>
+            <td style="text-align:center"><button class="btn btn-outline" onclick="removeFromCart(${p.id}); renderCartPage();">Remove</button></td>
+        </tr>`;
+            });
+            main.innerHTML = `<div class="card">
+        <div class="hero"><h2>Your Cart</h2><div class="muted">${cart.length} unique item(s)</div></div>
+        <div style="overflow:auto">
+          <table style="width:100%;border-collapse:collapse">
+            <thead><tr><th style="text-align:left">Product</th><th>Price</th><th>Qty</th><th>Total</th><th>Action</th></tr></thead>
+            <tbody>${rows || `<tr><td colspan="5" class="empty">Your cart is empty</td></tr>`}</tbody>
+            <tfoot><tr><td colspan="3" style="text-align:right;font-weight:700">Grand Total</td><td style="text-align:right;font-weight:700">$${formatPrice(grand)}</td><td></td></tr></tfoot>
+          </table>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
+            <button class="btn" onclick="checkout()">Checkout</button>
+            <button class="btn btn-outline" onclick="clearCart(); renderCartPage();">Clear Cart</button>
+        </div>
+    </div>`;
+            renderCartBadge();
+        }
+
+        function checkout() {
+            const session = getSession();
+            if (!session) { alert('Please sign in to complete checkout.'); location.hash = '#/login'; return; }
+            clearCart();
+            alert('Checkout complete! Thank you for your purchase.');
+            router();
+        }
+
+        function renderProfilePage() {
+            const session = getSession();
+            const main = document.getElementById('mainContent');
+            if (!session) { main.innerHTML = `<div class="card"><h2>Profile</h2><p class="muted">You are not signed in. <a href="#/login">Sign in</a> or <a href="#/signup">Sign up</a>.</p></div>`; return; }
+            const users = getUsers(); const user = users.find(u => u.username === session.username);
+            main.innerHTML = `<div class="card">
+        <div class="hero"><h2>Profile</h2><div class="muted">Manage your account</div></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+            <div><strong>Username:</strong> ${escapeHtml(user.username)}</div>
+            <div><strong>Name:</strong> <input id="profileName" value="${escapeHtml(user.name || '')}" /></div>
+            <div><strong>Email:</strong> <input id="profileEmail" value="${escapeHtml(user.email || '')}" /></div>
+            <div><strong>Password:</strong> <input id="profilePassword" type="password" placeholder="Leave blank to keep current" /></div>
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+                <button class="btn" onclick="saveProfile()">Save</button>
+                <button class="btn btn-outline" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>`;
+        }
+
+        function saveProfile() {
+            const session = getSession();
+            if (!session) return alert('Not signed in');
+            const users = getUsers();
+            const idx = users.findIndex(u => u.username === session.username);
+            if (idx < 0) return alert('User not found');
+            const name = document.getElementById('profileName').value.trim();
+            const email = document.getElementById('profileEmail').value.trim();
+            const pass = document.getElementById('profilePassword').value;
+            if (name) users[idx].name = name;
+            if (email) users[idx].email = email;
+            if (pass) users[idx].password = pass;
+            saveUsers(users);
+            alert('Profile updated');
+            updateAuthUI(getSession());
+            renderProfilePage();
+        }
+
+        function renderLoginPage() {
+            const main = document.getElementById('mainContent');
+            main.innerHTML = `<div class="card" style="max-width:520px;margin:auto">
+        <h2>Login</h2>
+        <div style="display:flex;flex-direction:column;gap:10px">
+            <input id="loginUsername" placeholder="Username or Email" />
+            <input id="loginPassword" type="password" placeholder="Password" />
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+                <button class="btn" onclick="login()">Login</button>
+                <button class="btn btn-outline" onclick="location.hash='#/signup'">Sign Up</button>
+            </div>
+        </div>
+    </div>`;
+        }
+
+        function renderSignupPage() {
+            const main = document.getElementById('mainContent');
+            main.innerHTML = `<div class="card" style="max-width:520px;margin:auto">
+        <h2>Sign Up</h2>
+        <div style="display:flex;flex-direction:column;gap:10px">
+            <input id="signupUsername" placeholder="Username" />
+            <input id="signupName" placeholder="Full name" />
+            <input id="signupEmail" placeholder="Email" />
+            <input id="signupPassword" type="password" placeholder="Password" />
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+                <button class="btn" onclick="signup()">Create Account</button>
+                <button class="btn btn-outline" onclick="location.hash='#/login'">Cancel</button>
+            </div>
+        </div>
+    </div>`;
+        }
+
+        function login() {
+            const key = document.getElementById('loginUsername').value.trim();
+            const pass = document.getElementById('loginPassword').value;
+            if (!key || !pass) return alert('Enter credentials');
+            const users = getUsers();
+            const user = users.find(u => u.username === key || u.email === key);
+            if (!user || user.password !== pass) return alert('Invalid credentials');
+            saveSession({ username: user.username });
+            updateAuthUI(getSession());
+            location.hash = '#/';
+        }
+
+        function signup() {
+            const username = document.getElementById('signupUsername').value.trim();
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const pass = document.getElementById('signupPassword').value;
+            if (!username || !email || !pass) return alert('Provide username, email and password');
+            const users = getUsers();
+            if (users.find(u => u.username === username || u.email === email)) return alert('User already exists');
+            users.push({ username, name, email, password: pass });
+            saveUsers(users);
+            saveSession({ username });
+            updateAuthUI(getSession());
+            location.hash = '#/';
+        }
+
+        function logout() {
+            saveSession(null);
+            updateAuthUI(null);
+            location.hash = '#/';
+        }
+
+        function openProductModal(id = null) {
+            document.getElementById('productModal').style.display = 'flex';
+            if (id) {
+                const p = getProducts().find(x => x.id === id);
+                document.getElementById('productModalTitle').textContent = 'Edit Product';
+                document.getElementById('productId').value = p.id;
+                document.getElementById('productName').value = p.name;
+                document.getElementById('productPrice').value = p.price;
+                document.getElementById('productStock').value = p.stock;
+            } else {
+                document.getElementById('productModalTitle').textContent = 'Add Product';
+                document.getElementById('productId').value = '';
+                document.getElementById('productName').value = '';
+                document.getElementById('productPrice').value = '';
+                document.getElementById('productStock').value = '';
+            }
+        }
+
+        function closeProductModal() { document.getElementById('productModal').style.display = 'none'; }
+
+        document.getElementById('saveProductBtn').addEventListener('click', () => {
+            const id = document.getElementById('productId').value;
+            const name = document.getElementById('productName').value.trim();
+            const price = Number(document.getElementById('productPrice').value);
+            const stock = Number(document.getElementById('productStock').value);
+            if (!name || isNaN(price) || isNaN(stock) || price < 0 || stock < 0) return alert('Invalid product data');
+            const products = getProducts();
+            if (id) {
+                const updated = products.map(p => p.id == id ? { id: Number(id), name, price, stock } : p);
+                saveProducts(updated);
+            } else {
+                products.push({ id: Date.now(), name, price, stock });
+                saveProducts(products);
+            }
+            closeProductModal();
+            renderFooter();
+            router();
+        });
+
+        function deleteProduct(id) {
+            if (!confirm('Delete this product?')) return;
+            const products = getProducts().filter(p => p.id !== id);
+            saveProducts(products);
+            renderFooter();
+            router();
+        }
+
+
+
+        function showAlert(message, title = 'Notice') {
+            const modal = document.getElementById('dialogModal');
+            document.getElementById('dialogTitle').textContent = title;
+            document.getElementById('dialogMessage').textContent = message;
+            const actions = document.getElementById('dialogActions');
+            actions.innerHTML = `<button class="btn" id="dialogOkBtn">OK</button>`;
+            modal.style.display = 'flex';
+            document.getElementById('dialogOkBtn').onclick = () => { modal.style.display = 'none'; };
+        }
+
+        function showConfirm(message, callback, title = 'Confirm') {
+            const modal = document.getElementById('dialogModal');
+            document.getElementById('dialogTitle').textContent = title;
+            document.getElementById('dialogMessage').textContent = message;
+            const actions = document.getElementById('dialogActions');
+            actions.innerHTML = `
+        <button class="btn" id="dialogYesBtn">Yes</button>
+        <button class="btn btn-outline" id="dialogNoBtn">No</button>
+    `;
+            modal.style.display = 'flex';
+            document.getElementById('dialogYesBtn').onclick = () => { modal.style.display = 'none'; callback(true); };
+            document.getElementById('dialogNoBtn').onclick = () => { modal.style.display = 'none'; callback(false); };
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('dialogModal').addEventListener('click', e => {
+            if (e.target.id === 'dialogModal') e.target.style.display = 'none';
+        });
+
+
+
+        function viewProduct(id) { const p = getProducts().find(x => x.id === id); if (!p) return alert('Not found'); alert(`${p.name}\n\nPrice: $${formatPrice(p.price)}\nStock: ${p.stock}`); }
+
+        function renderCartBadge() { renderCartBadge; } // no-op to keep function presence
+
+        function getSession() { return JSON.parse(localStorage.getItem(SESSION_KEY)); }
+        function saveSession(s) { localStorage.setItem(SESSION_KEY, JSON.stringify(s)); }
+
+        document.getElementById('productModal').addEventListener('click', (e) => { if (e.target.id === 'productModal') closeProductModal(); });
+        document.getElementById('authModal')?.addEventListener('click', (e) => { if (e.target.id === 'authModal') closeAuthModal(); });
+
+        function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
+
+        function renderCartBadge() { const b = document.getElementById('cartCountBadge'); const c = getCart(); const t = c.reduce((s, i) => s + i.qty, 0); if (t > 0) { b.style.display = 'inline-block'; b.textContent = t; } else { b.style.display = 'none'; b.textContent = ''; } }
+
+        renderFooter();
+        renderCartBadge();
+    </script>
+</body>
+
+</html>
